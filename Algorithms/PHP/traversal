@@ -1,0 +1,107 @@
+&lt;?php
+$incidenceList = array(
+    1 =&gt; array(
+        'vertex' =&gt; 1, // vertex number
+        'visited' =&gt; false, // `visited` flag
+        'letter' =&gt; 'G', // vertex value
+        'neighbours' =&gt; array(3, 4) // neighbours
+    ),
+    2 =&gt; array(
+        'vertex' =&gt; 2,
+        'visited' =&gt; false,
+        'letter' =&gt; 'I',
+        'neighbours' =&gt; array(4)
+    ),
+    3 =&gt; array(
+        'vertex' =&gt; 3,
+        'visited' =&gt; false,
+        'letter' =&gt; 'A',
+        'neighbours' =&gt; array(1, 4, 5)
+    ),
+    4 =&gt; array(
+        'vertex' =&gt; 4,
+        'visited' =&gt; false,
+        'letter' =&gt; 'N',
+        'neighbours' =&gt; array(1, 2, 3, 7)
+    ),
+    5 =&gt; array(
+        'vertex' =&gt; 5,
+        'visited' =&gt; false,
+        'letter' =&gt; 'R',
+        'neighbours' =&gt; array(3, 6, 7)
+    ),
+    6 =&gt; array(
+        'vertex' =&gt; 6,
+        'visited' =&gt; false,
+        'letter' =&gt; 'L',
+        'neighbours' =&gt; array(5, 8, 9)
+    ),
+    7 =&gt; array(
+        'vertex' =&gt; 7,
+        'visited' =&gt; false,
+        'letter' =&gt; 'K',
+        'neighbours' =&gt; array(4, 5, 9)
+    ),
+    8 =&gt; array(
+        'vertex' =&gt; 8,
+        'visited' =&gt; false,
+        'letter' =&gt; 'N',
+        'neighbours' =&gt; array(6, 10)
+    ),
+    9 =&gt; array(
+        'vertex' =&gt; 9,
+        'visited' =&gt; false,
+        'letter' =&gt; 'V',
+        'neighbours' =&gt; array(6, 7, 8)
+    ),
+    10 =&gt; array(
+        'vertex' =&gt; 10,
+        'visited' =&gt; false,
+        'letter' =&gt; 'A',
+        'neighbours' =&gt; array(8)
+    ),
+);
+function depthFirstSearch($vertex, $list)
+{
+    if (!$vertex['visited']) {
+        echo $vertex['letter']; // output on screen
+        // mark vertex as visited
+        $list[$vertex['vertex']]['visited'] = true;
+        foreach ($vertex['neighbours'] as $neighbour) {
+            // Watch neighbours, which were not visited yet
+            if (!$list[$neighbour]['visited']) {
+                // going through neighbour-vertexes
+                $list = depthFirstSearch(
+                    $list[$neighbour],
+                    $list
+                );
+            }
+        }
+    }
+ 
+    return $list;
+}
+ 
+function breadthFirstSearch($list)
+{
+    $queue = array();
+    array_unshift($queue, $list[1]);
+    $list[1]['visited'] = true;
+ 
+    while (sizeof($queue)) {
+        $vertex = array_pop($queue);
+        echo $vertex['letter']; // output on screen
+        foreach ($vertex['neighbours'] as $neighbour) {
+            // Watch neighbours, which were not visited yet
+            if (!$list[$neighbour]['visited']) {
+                // mark vertex as visited
+                $list[$neighbour]['visited'] = true;
+                array_unshift($queue, $list[$neighbour]);
+            }
+        }
+    }
+}
+
+depthFirstSearch($incidenceList[1], $incidenceList);
+echo "\n";
+breadthFirstSearch($incidenceList);
