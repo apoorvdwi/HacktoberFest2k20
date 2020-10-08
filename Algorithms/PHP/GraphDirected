@@ -1,0 +1,49 @@
+!--?php
+require_once 'Structures/Graph.php';
+require_once 'Structures/Graph/Node.php';
+$nonDirectedGraph = new Structures_Graph(false);
+$nodes_names = array('a', 'b', 'c' ,'d', 'e');
+$nodes = array();
+foreach($nodes_names as $node) {
+    /* Create a new node / vertex */
+    $nodes[$node] = new Structures_Graph_Node();
+    
+    /* Add the node to the Graph structure */
+    $nonDirectedGraph --->addNode($nodes[$node]);
+}
+$vertices = array('a-b', 'b-c', 'b-d', 'd-c', 'c-e', 'e-d');
+foreach($vertices as $vertex) {
+    $data = preg_split("/-/",$vertex);
+    $nodes[$data[0]]->connectTo($nodes[$data[1]]);
+}
+
+// adding data to the node
+
+$nodes['b']->setData("this is the data to be entered");
+
+echo $nodes['b']->getData();//retrieve data
+
+$nodes['a']->setMetadata('node weight', 30);
+echo $nodes['a']->getMetadata('node weight'); // returns 30
+
+echo $nodes['b']->inDegree(); // returns 3
+echo $nodes['b']->outDegree(); // returns 3
+
+$gNodes = $nonDirectedGraph ->getNodes();
+foreach($gNodes as $node) {
+    echo $node->getData();
+}
+
+require_once 'Structures/Graph/Manipulator/AcyclicTest.php';
+$t = new Structures_Graph_Manipulator_AcyclicTest();
+echo $t->isAcyclic($directedGraph ); // returns 'false' for Fig. 1
+
+echo $nodes['a']->connectsTo($nodes['b']); // true
+echo $nodes['b']->connectsTo($nodes['a']); // true
+echo $nodes['b']->connectsTo($nodes['d']); // true
+echo $nodes['e']->connectsTo($nodes['a']); // true
+
+echo $nodes['a']->connectsTo($nodes['b']); // true
+echo $nodes['b']->connectsTo($nodes['a']); // false
+echo $nodes['b']->connectsTo($nodes['d']); // true
+echo $nodes['e']->connectsTo($nodes['a']); // false
